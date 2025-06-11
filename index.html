@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>RS PAY - UPI Payment</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: #f5f8ff;
+      color: #333;
+    }
+
+    header {
+      background: linear-gradient(135deg, #4e54c8, #8f94fb);
+      padding: 25px;
+      text-align: center;
+      color: #fff;
+      font-size: 32px;
+      font-weight: 600;
+      letter-spacing: 1px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    }
+
+    .container {
+      max-width: 480px;
+      margin: 40px auto;
+      background: #ffffffcc;
+      padding: 30px;
+      border-radius: 16px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+      backdrop-filter: blur(10px);
+    }
+
+    .qr-box {
+      background: linear-gradient(135deg, #8f94fb, #4e54c8);
+      padding: 10px;
+      border-radius: 20px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 20px;
+      position: relative;
+    }
+
+    .qr-box img {
+      width: 230px;
+      height: 230px;
+      border-radius: 10px;
+      border: 4px solid white;
+    }
+
+    .amount-text {
+      position: absolute;
+      top: -15px;
+      background: #4e54c8;
+      color: #fff;
+      padding: 6px 20px;
+      font-size: 26px;
+      font-weight: bold;
+      border-radius: 30px;
+      box-shadow: 0 0 15px #fff;
+      animation: glow 1.5s infinite alternate;
+    }
+
+    .countdown {
+      font-size: 22px;
+      color: #4e54c8;
+      font-weight: bold;
+      text-align: center;
+      margin: 15px 0;
+      text-shadow: 0 0 10px #4e54c8;
+      animation: glow 1s infinite alternate;
+    }
+
+    @keyframes glow {
+      from { text-shadow: 0 0 6px #4e54c8; }
+      to { text-shadow: 0 0 20px #4e54c8; }
+    }
+
+    .btn-download {
+      background: linear-gradient(to right, #8f94fb, #4e54c8);
+      color: #fff;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 8px;
+      font-weight: bold;
+      cursor: pointer;
+      margin: 15px auto;
+      display: block;
+      box-shadow: 0 4px 14px rgba(0, 0, 0, 0.1);
+    }
+
+    .upi-text {
+      text-align: center;
+      font-weight: 600;
+      font-size: 18px;
+      margin-top: 10px;
+      color: #333;
+    }
+
+    .utr-input {
+      width: 100%;
+      padding: 12px;
+      margin-top: 20px;
+      border: 2px solid #4e54c8;
+      border-radius: 8px;
+      font-size: 16px;
+      animation: glow 1s infinite alternate, vibrate 0.4s infinite;
+    }
+
+    @keyframes vibrate {
+      0% { transform: translateX(0); }
+      25% { transform: translateX(-1px); }
+      50% { transform: translateX(1px); }
+      75% { transform: translateX(-1px); }
+      100% { transform: translateX(1px); }
+    }
+
+    .logo-grid {
+      display: flex;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      margin-top: 30px;
+    }
+
+    .logo-box {
+      width: 22%;
+      background: #fff;
+      padding: 10px;
+      border-radius: 10px;
+      text-align: center;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+      cursor: pointer;
+    }
+
+    .logo-box img {
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+    }
+
+    .logo-box span {
+      display: block;
+      margin-top: 5px;
+      font-size: 14px;
+      font-weight: 500;
+    }
+
+    .steps {
+      margin-top: 40px;
+      padding: 20px;
+      background: #f0f4ff;
+      border-left: 5px solid #4e54c8;
+      border-radius: 10px;
+    }
+
+    .steps h3 {
+      color: #4e54c8;
+      margin-bottom: 10px;
+    }
+
+    .steps ul {
+      padding-left: 20px;
+      list-style-type: disc;
+    }
+
+    .steps li {
+      margin-bottom: 8px;
+      font-size: 15px;
+    }
+  </style>
+</head>
+<body>
+
+<header>RS PAY</header>
+
+<div class="container">
+  <div class="qr-box">
+    <div class="amount-text">₹100</div>
+    <img id="upi-qr" src="qr6.png" alt="UPI QR">
+  </div>
+
+  <div class="countdown" id="countdown">20:00</div>
+
+  <button class="btn-download" onclick="downloadQR()">Download QR</button>
+
+  <div class="upi-text" id="upi-id-text">UPI - tiwari120981@fam</div>
+
+  <input type="text" id="utrInput" class="utr-input" placeholder="Enter UTR Number">
+  
+  <div class="logo-grid">
+    <div class="logo-box" onclick="openUPI('paytm')"><img src="paytm_icon-icons.com_62778.png"><span>Paytm</span></div>
+    <div class="logo-box" onclick="openUPI('phonepe')"><img src="phonepe_logo.png"><span>PhonePe</span></div>
+    <div class="logo-box" onclick="openUPI('gpay')"><img src="Frame-43-1.png"><span>GPay</span></div>
+    <div class="logo-box" onclick="openUPI('bhim')"><img src="bhim.png"><span>BHIM</span></div>
+  </div>
+
+  <div class="steps">
+    <h3>How to Pay</h3>
+    <ul>
+      <li>Scan the QR Code using any UPI app.</li>
+      <li>Enter the amount and confirm payment.</li>
+    </ul>
+
+    <h3>How to Enter UTR</h3>
+    <ul>
+      <li>After payment, go to transaction history in your UPI app.</li>
+      <li>Copy the 12-digit UTR/Reference number.</li>
+      <li>Paste it in the UTR box above.</li>
+    </ul>
+
+    <h3>How Payment is Verified</h3>
+    <ul>
+      <li>If UTR is valid (12 digits), you'll see Confirm/Cancel popup.</li>
+      <li>Confirm it to complete verification successfully.</li>
+    </ul>
+  </div>
+</div>
+
+<script>
+  const qrList = [
+    { src: "qr1.jpg", upi: "nitinkumartiwari426-6@oksbi" },
+    { src: "qr2.jpg", upi: "nitinkumartiwari426-5@oksbi" },
+    { src: "qr3.jpg", upi: "nitinkumartiwari426-4@oksbi" },
+    { src: "qr4.jpg", upi: "nitinkumartiwari426-1@oksbi" },
+    { src: "qr5.jpg", upi: "nirazbro508@oksbi" },
+    { src: "qr6.jpg", upi: "tiwari120981@fam" },
+    { src: "qr7.jpg", upi: "km8737166@okaxis" }
+  ];
+
+  const selected = qrList[Math.floor(Math.random() * qrList.length)];
+  document.getElementById('upi-qr').src = selected.src;
+  document.getElementById('upi-id-text').textContent = "UPI - " + selected.upi;
+
+  // Countdown
+  let time = 20 * 60;
+  const countdownEl = document.getElementById('countdown');
+  setInterval(() => {
+    if (time > 0) {
+      const minutes = Math.floor(time / 60);
+      const seconds = time % 60;
+      countdownEl.textContent = `${minutes}:${seconds.toString().padStart(2, '0')}`;
+      time--;
+    }
+  }, 1000);
+
+  // UTR validation
+  document.getElementById("utrInput").addEventListener("input", function () {
+    const utr = this.value.trim();
+    if (utr.length === 12 && /^[0-9]+$/.test(utr)) {
+      if (confirm(`Confirm UTR: ${utr}?`)) {
+        alert("✅ UTR submitted successfully!");
+      } else {
+        alert("❌ Submission cancelled.");
+      }
+    }
+  });
+
+  // Download QR
+  function downloadQR() {
+    const img = document.getElementById('upi-qr');
+    const link = document.createElement('a');
+    link.href = img.src;
+    link.download = "upi_qr.png";
+    link.click();
+  }
+
+  // UPI App Redirect
+  function openUPI(app) {
+    const upi = selected.upi;
+    const amount = 100;
+    const upiLink = `upi://pay?pa=${upi}&pn=RS%20Pay&am=${amount}&cu=INR`;
+
+    // Redirect to UPI app
+    window.location.href = upiLink;
+  }
+</script>
+
+</body>
+</html>
